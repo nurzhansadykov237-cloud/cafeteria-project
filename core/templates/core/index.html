@@ -1,147 +1,161 @@
 
+{% extends "core/base.html" %}
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Столовая — меню и предзаказ</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            max-width: 900px;
-            margin: 30px auto;
-            padding: 20px;
-            background: #f5f5f5;
-        }
-        h1 { color: #333; }
-        .dish {
-            background: white;
-            padding: 15px;
-            margin: 10px 0;
-            border-radius: 8px;
-        }
-        button {
-            background: #218838;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        input[type="text"] {
-            padding: 10px;
-            width: 250px;
-        }
-        a { margin-right: 12px; }
-    </style>
-</head>
-<body>
+{% block title %}Главная — Столовая{% endblock %}
 
-<h1>Столовая — меню и предзаказ</h1>
+{% block content %}
+
+<h1 class="mb-4">Столовая — меню и предзаказ</h1>
 
 {% if request.GET.success %}
-    <p style="color: green; font-weight: bold; font-size: 20px;">
+    <div class="alert alert-success">
         Заказ №{{ request.GET.success }} успешно оформлен!
-    </p>
+    </div>
 {% endif %}
 
 {% if request.GET.total %}
-    <p style="color: blue; font-weight: bold; font-size: 20px;">
+    <div class="alert alert-info">
         Общая стоимость заказа: {{ request.GET.total }} тг.
-    </p>
-{% endif %}
-
-{% if messages %}
-    {% for message in messages %}
-        <p>{{ message }}</p>
-    {% endfor %}
-{% endif %}
-
-<h2>Категории</h2>
-<a href="/">Все блюда</a>
-{% for category in categories %}
-    <a href="/?category={{ category.id }}">{{ category.name }}</a>
-{% endfor %}
-
-<h2>Поиск блюд</h2>
-<form method="get">
-    <input
-        type="text"
-        name="search"
-        placeholder="Название или описание блюда"
-        value="{{ search|default:'' }}"
-    >
-
-    <select name="category">
-        <option value="">Все категории</option>
-        {% for category in categories %}
-            <option value="{{ category.id }}"
-                {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
-                {{ category.name }}
-            </option>
-        {% endfor %}
-    </select>
-
-    <select name="sort">
-        <option value="">По названию</option>
-        <option value="price" {% if sort == "price" %}selected{% endif %}>
-            Сначала дешевле
-        </option>
-        <option value="-price" {% if sort == "-price" %}selected{% endif %}>
-            Сначала дороже
-        </option>
-    </select>
-
-    <button type="submit">Найти</button>
-</form>
-{% if page_obj.has_other_pages %}
-    <div>
-        {% if page_obj.has_previous %}
-            <a href="?page={{ page_obj.previous_page_number }}&search={{ search|default:'' }}&category={{ selected_category|default:'' }}&sort={{ sort|default:'' }}">
-                Назад
-            </a>
-        {% endif %}
-
-        <span>
-            Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
-        </span>
-
-        {% if page_obj.has_next %}
-            <a href="?page={{ page_obj.next_page_number }}&search={{ search|default:'' }}&category={{ selected_category|default:'' }}&sort={{ sort|default:'' }}">
-                Вперёд
-            </a>
-        {% endif %}
     </div>
 {% endif %}
-<h2>Меню</h2>
 
-<form method="post" action="{% url 'create_order' %}">
-    {% csrf_token %}
+<h2 class="mb-3">Категории</h2>
 
-    <label>Ваше имя:</label><br>
-    <input type="text" name="customer_name" required>
-    <br><br>
+<div class="mb-4">
+    <a class="btn btn-outline-secondary btn-sm" href="/">Все блюда</a>
+    {% for category in categories %}
+        <a class="btn btn-outline-primary btn-sm"
+           href="/?category={{ category.id }}">
+            {{ category.name }}
+        </a>
+    {% endfor %}
+</div>
 
+<h2 class="mb-3">Поиск блюд</h2>
+
+<form method="get" class="row g-2 mb-4">
+
+    <div class="col-md-4">
+        <input
+            type="text"
+            name="search"
+            class="form-control"
+            placeholder="Название или описание"
+            value="{{ search|default:'' }}"
+        >
+    </div>
+
+    <div class="col-md-3">
+        <select name="category" class="form-select">
+            <option value="">Все категории</option>
+            {% for category in categories %}
+                <option value="{{ category.id }}"
+                    {% if selected_category == category.id|stringformat:"s" %}selected{% endif %}>
+                    {{ category.name }}
+                </option>
+            {% endfor %}
+        </select>
+    </div>
+
+    <div class="col-md-3">
+        <select name="sort" class="form-select">
+            <option value="">По названию</option>
+            <option value="price" {% if sort == "price" %}selected{% endif %}>
+                Сначала дешевле
+            </option>
+            <option value="-price" {% if sort == "-price" %}selected{% endif %}>
+                Сначала дороже
+            </option>
+        </select>
+    </div>
+
+    <div class="col-md-2">
+        <button type="submit" class="btn btn-primary w-100">Найти</button>
+    </div>
+
+</form>
+
+<h2 class="mb-3">Меню</h2>
+
+
+<div class="row">
     {% for dish in dishes %}
-        <div class="dish">
-            <label>
-                <input type="checkbox" name="dishes" value="{{ dish.id }}">
-                <strong>{{ dish.name }}</strong>
-            </label>
-            <p>{{ dish.description }}</p>
-            <p>Категория: {{ dish.category.name }}</p>
-            <p>Цена: {{ dish.price }} тг.</p>
-<p>
-    Количество:
-    <input type="number" name="quantity_{{ dish.id }}" min="1" value="1">
-</p>
+        <div class="col-md-6 mb-3">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+
+                    <h5>{{ dish.name }}</h5>
+
+                    <p>{{ dish.description }}</p>
+                    <p>Категория: {{ dish.category.name }}</p>
+
+                    <p class="fw-bold text-success">
+                        Цена: {{ dish.price }} тг.
+                    </p>
+
+                    <form method="post"
+                          action="{% url 'add_to_cart' dish.id %}">
+                        {% csrf_token %}
+
+                        <label class="form-label">Количество:</label>
+
+                        <input type="number"
+                               name="quantity"
+                               min="1"
+                               value="1"
+                               class="form-control mb-3">
+
+                        <button type="submit"
+                                class="btn btn-success">
+                            Добавить в корзину
+                        </button>
+                    </form>
+
+                </div>
+            </div>
         </div>
     {% empty %}
         <p>Блюд пока нет.</p>
     {% endfor %}
+</div>
 
-    <button type="submit">Оформить предзаказ</button>
-</form>
+<div class="mt-4">
+    <a href="{% url 'cart' %}" class="btn btn-primary btn-lg">
+        🛒 Перейти в корзину
+    </a>
+</div>
 
-</body>
-</html>
+
+{% if page_obj.has_other_pages %}
+    <nav class="mt-4">
+        <ul class="pagination">
+
+            {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?page={{ page_obj.previous_page_number }}&search={{ search|default:'' }}&category={{ selected_category|default:'' }}&sort={{ sort|default:'' }}">
+                        Назад
+                    </a>
+                </li>
+            {% endif %}
+
+            <li class="page-item active">
+                <span class="page-link">
+                    Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+                </span>
+            </li>
+
+            {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link"
+                       href="?page={{ page_obj.next_page_number }}&search={{ search|default:'' }}&category={{ selected_category|default:'' }}&sort={{ sort|default:'' }}">
+                        Вперёд
+                    </a>
+                </li>
+            {% endif %}
+
+        </ul>
+    </nav>
+{% endif %}
+
+{% endblock %}

@@ -1,63 +1,111 @@
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Статистика столовой</title>
-</head>
-<body>
+{% extends "core/base.html" %}
 
-    <h1>Статистика столовой</h1>
+{% block title %}Статистика — Столовая{% endblock %}
 
-    <h2>Общие показатели</h2>
+{% block content %}
 
-    <p>Всего блюд: <strong>{{ dishes_count }}</strong></p>
+<h1 class="mb-4">Статистика столовой</h1>
 
-    <p>Всего заказов: <strong>{{ orders_count }}</strong></p>
+<h2 class="mb-3">Общие показатели</h2>
 
-    <p>Общая выручка: <strong>{{ total_revenue }} тг.</strong></p>
+<div class="row mb-4">
 
-    <hr>
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-primary h-100">
+            <div class="card-body">
+                <h5 class="card-title">Всего блюд</h5>
+                <h2 class="text-primary">{{ dishes_count }}</h2>
+            </div>
+        </div>
+    </div>
 
-<h2>Отчёт за сегодня — {{ today|date:"d.m.Y" }}</h2>
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-success h-100">
+            <div class="card-body">
+                <h5 class="card-title">Всего заказов</h5>
+                <h2 class="text-success">{{ orders_count }}</h2>
+            </div>
+        </div>
+    </div>
 
-<p>Заказов за сегодня:
-    <strong>{{ daily_orders_count }}</strong>
-</p>
+    <div class="col-md-4 mb-3">
+        <div class="card shadow-sm border-warning h-100">
+            <div class="card-body">
+                <h5 class="card-title">Общая выручка</h5>
+                <h2 class="text-warning">{{ total_revenue }} тг.</h2>
+            </div>
+        </div>
+    </div>
 
-<p>Выручка за сегодня:
-    <strong>{{ daily_revenue }} тг.</strong>
-</p>
-
-<h3>Топ-5 блюд за сегодня</h3>
-
-{% for dish in daily_top_dishes %}
-    <p>
-        {{ forloop.counter }}.
-        {{ dish.dish__name }} —
-        заказано: {{ dish.total_quantity }} шт.
-    </p>
-{% empty %}
-    <p>Сегодня заказов пока нет.</p>
-{% endfor %}
+</div>
 
 <hr>
 
-    <h2>Топ-5 популярных блюд</h2>
+<h2 class="mb-3">
+    Отчёт за сегодня — {{ today|date:"d.m.Y" }}
+</h2>
 
-    {% for dish in top_dishes %}
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
         <p>
-            {{ forloop.counter }}.
-            {{ dish.dish__name }} —
-            заказано: {{ dish.total_quantity }} шт.
+            Заказов за сегодня:
+            <strong>{{ daily_orders_count }}</strong>
         </p>
-    {% empty %}
-        <p>Пока нет заказанных блюд.</p>
-    {% endfor %}
 
-    <hr>
+        <p>
+            Выручка за сегодня:
+            <strong class="text-success">
+                {{ daily_revenue }} тг.
+            </strong>
+        </p>
 
-    <a href="/">Вернуться на главную</a>
+        <h3 class="mt-4">Топ-5 блюд за сегодня</h3>
 
-</body>
-</html>
+        <ol class="list-group list-group-numbered">
+            {% for dish in daily_top_dishes %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ dish.dish__name }}
+                    <span class="badge bg-primary rounded-pill">
+                        {{ dish.total_quantity }} шт.
+                    </span>
+                </li>
+            {% empty %}
+                <li class="list-group-item">
+                    Сегодня заказов пока нет.
+                </li>
+            {% endfor %}
+        </ol>
+
+    </div>
+</div>
+
+<h2 class="mb-3">Топ-5 популярных блюд за всё время</h2>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-body">
+
+        <ol class="list-group list-group-numbered">
+            {% for dish in top_dishes %}
+                <li class="list-group-item d-flex justify-content-between">
+                    {{ dish.dish__name }}
+                    <span class="badge bg-success rounded-pill">
+                        {{ dish.total_quantity }} шт.
+                    </span>
+                </li>
+            {% empty %}
+                <li class="list-group-item">
+                    Пока нет заказанных блюд.
+                </li>
+            {% endfor %}
+        </ol>
+
+    </div>
+</div>
+
+<a href="/" class="btn btn-outline-secondary">
+    Вернуться на главную
+</a>
+
+{% endblock %}

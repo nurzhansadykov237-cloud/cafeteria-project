@@ -173,3 +173,83 @@ class DishAPITest(TestCase):
         )
 
         self.assertEqual(response.status_code, 403)
+
+class CartTest(TestCase):
+
+    def setUp(self):
+        self.category = Category.objects.create(
+            name="Тестовая категория"
+        )
+
+        self.dish = Dish.objects.create(
+            category=self.category,
+            name="Тестовый борщ",
+            description="Борщ для проверки корзины",
+            price=500,
+            is_available=True
+        )
+
+    def test_add_dish_to_cart(self):
+        response = self.client.post(
+            reverse("add_to_cart", args=[self.dish.id]),
+            {"quantity": 2}
+        )
+
+        self.assertRedirects(response, reverse("cart"))
+
+        cart = self.client.session["cart"]
+        self.assertEqual(cart[str(self.dish.id)], 2)
+
+    def test_cart_total(self):
+        session = self.client.session
+        session["cart"] = {str(self.dish.id): 2}
+        session.save()
+
+        response = self.client.get(reverse("cart"))
+
+        self.assertEqual(response.context["total"], 1000)
+
+    def test_update_cart_quantity(self):
+        session = self.client.session
+        session["cart"] = {str(self.dish.id): 2}
+        session.save()
+
+        self.client.post(
+            reverse("update_cart", args=[self.dish.id]),
+            {"quantity": 5}
+        )
+
+        cart = self.client.session["cart"]
+        self.assertEqual(cart[str(self.dish.id)], 5)
+
+    def test_remove_dish_from_cart(self):
+        session = self.client.session
+        session["cart"] = {str(self.dish.id): 2}
+        session.save()
+
+        self.client.post(
+            reverse("remove_from_cart", args=[self.dish.id])
+        )
+
+        cart = self.client.session["cart"]
+        self.assertNotIn(str(self.dish.id), cart)
+
+    def test_checkout_creates_order_and_clears_cart(self):
+        session = self.client.session
+        session["cart"] = {str(self.dish.id): 2}
+        session.save()
+
+        response = self.client.post(
+            reverse("checkout"),
+            {"customer_name": "Тестовый клиент"}
+        )
+
+        self.assertEqual(Order.objects.count(), 1)
+
+        order = Order.objects.first()
+
+        self.assertEqual(order.customer_name, "Тестовый клиент")
+        self.assertEqual(order.items.count(), 1)
+        self.assertEqual(order.items.first().quantity, 2)
+
+        self.assertEqual(self.client.session["cart"], {})
