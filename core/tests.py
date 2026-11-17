@@ -100,6 +100,28 @@ class DishFormTest(TestCase):
 
         self.assertFalse(form.is_valid())
 
+    def test_zero_price_is_invalid(self):
+        form = DishForm(data={
+            "category": self.category.id,
+            "name": "Бесплатный суп",
+            "description": "Тест",
+            "price": "0.00",
+            "is_available": True
+        })
+
+        self.assertFalse(form.is_valid())
+
+    def test_negative_price_is_invalid(self):
+        form = DishForm(data={
+            "category": self.category.id,
+            "name": "Суп с отрицательной ценой",
+            "description": "Тест",
+            "price": "-100.00",
+            "is_available": True
+        })
+
+        self.assertFalse(form.is_valid())
+
 class HomeViewTest(TestCase):
 
     def test_home_page_status_code(self):

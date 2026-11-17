@@ -32,3 +32,13 @@ class DishForm(forms.ModelForm):
                 "class": "form-check-input"
             }),
         }
+
+    def clean_price(self):
+        price = self.cleaned_data.get("price")
+
+        if price is not None and price <= 0:
+            raise forms.ValidationError(
+                "Цена блюда должна быть больше нуля."
+            )
+
+        return price
