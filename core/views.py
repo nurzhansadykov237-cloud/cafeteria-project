@@ -261,9 +261,19 @@ def cart_view(request):
 
     cart_items = []
     total = 0
+    valid_cart = {}
 
     for dish in dishes:
-        quantity = cart.get(str(dish.id), 0)
+        try:
+            quantity = int(cart.get(str(dish.id), 0))
+        except (ValueError, TypeError):
+            continue
+
+        if quantity < 1:
+            continue
+
+        valid_cart[str(dish.id)] = quantity
+
         subtotal = dish.price * quantity
         total += subtotal
 
@@ -272,6 +282,13 @@ def cart_view(request):
             "quantity": quantity,
             "subtotal": subtotal,
         })
+
+    if valid_cart != cart:
+        request.session["cart"] = valid_cart
+        messages.warning(
+            request,
+            "Некорректные позиции корзины были удалены."
+        )
 
     return render(request, "core/cart.html", {
         "cart_items": cart_items,
@@ -337,22 +354,31 @@ def checkout(request):
         messages.error(request, "Некоторые блюда больше недоступны.")
         return redirect("cart")
 
+    quantities = {}
+
+    for dish in dishes:
+        try:
+            quantity = int(cart[str(dish.id)])
+        except (ValueError, TypeError):
+            messages.error(request, "Некорректное количество блюд.")
+            return redirect("cart")
+
+        if quantity < 1:
+            messages.error(request, "Количество должно быть больше нуля.")
+            return redirect("cart")
+
+        quantities[dish.id] = quantity
+
     with transaction.atomic():
         order = Order.objects.create(
             customer_name=customer_name
         )
 
         for dish in dishes:
-            quantity = int(cart[str(dish.id)])
-
-            if quantity < 1:
-                messages.error(request, "Некорректное количество блюд.")
-                return redirect("cart")
-
             OrderItem.objects.create(
                 order=order,
                 dish=dish,
-                quantity=quantity,
+                quantity=quantities[dish.id],
                 price=dish.price
             )
 
@@ -364,7 +390,6 @@ def checkout(request):
     )
 
     return redirect("home")
-
 def remove_from_cart(request, dish_id):
     if request.method == "POST":
         cart = request.session.get("cart", {})

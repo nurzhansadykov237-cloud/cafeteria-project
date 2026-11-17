@@ -280,3 +280,18 @@ class CartInvalidQuantityTest(TestCase):
             str(self.dish.id),
             self.client.session.get("cart", {})
         )
+
+    def test_checkout_with_invalid_cart_quantity(self):
+        session = self.client.session
+        session["cart"] = {
+            str(self.dish.id): "abc"
+        }
+        session.save()
+
+        response = self.client.post(
+            reverse("checkout"),
+            {"customer_name": "Тестовый клиент"}
+        )
+
+        self.assertRedirects(response, reverse("cart"))
+        self.assertEqual(Order.objects.count(), 0)
