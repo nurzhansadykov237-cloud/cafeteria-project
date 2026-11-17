@@ -253,3 +253,30 @@ class CartTest(TestCase):
         self.assertEqual(order.items.first().quantity, 2)
 
         self.assertEqual(self.client.session["cart"], {})
+
+class CartInvalidQuantityTest(TestCase):
+
+    def setUp(self):
+        self.category = Category.objects.create(
+            name="Тестовая категория"
+        )
+
+        self.dish = Dish.objects.create(
+            category=self.category,
+            name="Тестовый суп",
+            description="Проверка количества",
+            price=300,
+            is_available=True
+        )
+
+    def test_add_to_cart_with_invalid_quantity(self):
+        response = self.client.post(
+            reverse("add_to_cart", args=[self.dish.id]),
+            {"quantity": "abc"}
+        )
+
+        self.assertRedirects(response, reverse("home"))
+        self.assertNotIn(
+            str(self.dish.id),
+            self.client.session.get("cart", {})
+        )

@@ -289,7 +289,11 @@ def add_to_cart(request, dish_id):
             messages.error(request, "Блюдо недоступно.")
             return redirect("home")
 
-        quantity = int(request.POST.get("quantity", 1))
+        try:
+            quantity = int(request.POST.get("quantity", 1))
+        except (ValueError, TypeError):
+            messages.error(request, "Введите корректное количество.")
+            return redirect("home")
 
         if quantity < 1:
             messages.error(request, "Количество должно быть больше нуля.")
