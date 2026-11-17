@@ -1,0 +1,20 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Удаление блюда</title>
+</head>
+<body>
+    <h1>Удалить блюдо?</h1>
+
+    <p>Вы действительно хотите удалить блюдо «{{ dish.name }}»?</p>
+
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit">Да, удалить</button>
+    </form>
+
+    <a href="{% url 'dish_list' %}">Отмена</a>
+</body>
+</html>

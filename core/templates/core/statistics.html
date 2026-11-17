@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Статистика столовой</title>
+</head>
+<body>
+
+    <h1>Статистика столовой</h1>
+
+    <h2>Общие показатели</h2>
+
+    <p>Всего блюд: <strong>{{ dishes_count }}</strong></p>
+
+    <p>Всего заказов: <strong>{{ orders_count }}</strong></p>
+
+    <p>Общая выручка: <strong>{{ total_revenue }} тг.</strong></p>
+
+    <hr>
+
+<h2>Отчёт за сегодня — {{ today|date:"d.m.Y" }}</h2>
+
+<p>Заказов за сегодня:
+    <strong>{{ daily_orders_count }}</strong>
+</p>
+
+<p>Выручка за сегодня:
+    <strong>{{ daily_revenue }} тг.</strong>
+</p>
+
+<h3>Топ-5 блюд за сегодня</h3>
+
+{% for dish in daily_top_dishes %}
+    <p>
+        {{ forloop.counter }}.
+        {{ dish.dish__name }} —
+        заказано: {{ dish.total_quantity }} шт.
+    </p>
+{% empty %}
+    <p>Сегодня заказов пока нет.</p>
+{% endfor %}
+
+<hr>
+
+    <h2>Топ-5 популярных блюд</h2>
+
+    {% for dish in top_dishes %}
+        <p>
+            {{ forloop.counter }}.
+            {{ dish.dish__name }} —
+            заказано: {{ dish.total_quantity }} шт.
+        </p>
+    {% empty %}
+        <p>Пока нет заказанных блюд.</p>
+    {% endfor %}
+
+    <hr>
+
+    <a href="/">Вернуться на главную</a>
+
+</body>
+</html>

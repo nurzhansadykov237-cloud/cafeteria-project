@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Список блюд</title>
+</head>
+<body>
+    <h1>Список блюд</h1>
+
+    <a href="{% url 'dish_create' %}">Добавить блюдо</a>
+
+    <hr>
+
+    {% for dish in dishes %}
+        <h3>{{ dish.name }}</h3>
+        <p>Категория: {{ dish.category }}</p>
+        <p>Цена: {{ dish.price }} тг.</p>
+
+        <a href="{% url 'dish_detail' dish.pk %}">Подробнее</a>
+        <hr>
+    {% empty %}
+        <p>Блюд пока нет.</p>
+    {% endfor %}
+
+    <a href="/">На главную</a>
+</body>
+</html>
