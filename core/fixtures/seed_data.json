@@ -1,0 +1,397 @@
+[
+{
+  "model": "core.category",
+  "pk": 1,
+  "fields": {
+    "name": "Первые блюда",
+    "description": "Супы и горячие первые блюда"
+  }
+},
+{
+  "model": "core.category",
+  "pk": 2,
+  "fields": {
+    "name": "Вторые блюда",
+    "description": "Горячие блюда из мяса, курицы, рыбы и гарниров"
+  }
+},
+{
+  "model": "core.category",
+  "pk": 3,
+  "fields": {
+    "name": "Салаты",
+    "description": "Свежие овощные салаты и холодные закуски"
+  }
+},
+{
+  "model": "core.category",
+  "pk": 4,
+  "fields": {
+    "name": "Напитки",
+    "description": "Чай, кофе, соки, компоты и прохладительные напитки"
+  }
+},
+{
+  "model": "core.category",
+  "pk": 5,
+  "fields": {
+    "name": "Десерты",
+    "description": "Сладкая выпечка, торты, пирожные и другие десерты"
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 1,
+  "fields": {
+    "category": 1,
+    "name": "Борщ",
+    "description": "Традиционный борщ со свежими овощами.",
+    "price": "900.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 2,
+  "fields": {
+    "category": 1,
+    "name": "Куриный суп",
+    "description": "Ароматный суп на курином бульоне с нежным мясом курицы, картофелем, морковью и зеленью.",
+    "price": "800.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 3,
+  "fields": {
+    "category": 2,
+    "name": "Плов",
+    "description": "Ароматный рис с сочным мясом, морковью, луком и традиционными специями.",
+    "price": "1500.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 4,
+  "fields": {
+    "category": 2,
+    "name": "Котлета с пюре",
+    "description": "Сочная домашняя мясная котлета с нежным картофельным пюре и свежей зеленью.",
+    "price": "1400.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 5,
+  "fields": {
+    "category": 3,
+    "name": "Салат Цезарь",
+    "description": "Свежие листья салата, куриное филе, сухарики, сыр и нежный соус Цезарь.",
+    "price": "1300.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 6,
+  "fields": {
+    "category": 3,
+    "name": "Овощной салат",
+    "description": "Лёгкий салат из свежих помидоров, огурцов, сладкого перца и зелени.",
+    "price": "700.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 7,
+  "fields": {
+    "category": 4,
+    "name": "Компот",
+    "description": "Домашний фруктовый компот с приятным сладким вкусом, приготовленный из сезонных фруктов.",
+    "price": "300.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 8,
+  "fields": {
+    "category": 4,
+    "name": "Чай",
+    "description": "Горячий ароматный чай с насыщенным вкусом, который отлично дополнит любой обед.",
+    "price": "200.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 9,
+  "fields": {
+    "category": 5,
+    "name": "Чизкейк",
+    "description": "Нежный сливочный десерт на песочной основе с мягкой кремовой текстурой.",
+    "price": "900.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 10,
+  "fields": {
+    "category": 5,
+    "name": "Шоколадный кекс",
+    "description": "Мягкий шоколадный кекс с насыщенным вкусом какао и ароматной выпечкой.",
+    "price": "500.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 11,
+  "fields": {
+    "category": 1,
+    "name": "Щи",
+    "description": "Традиционный суп",
+    "price": "850.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 12,
+  "fields": {
+    "category": 2,
+    "name": "Макароны с котлетой",
+    "description": "Макароны с мясной котлетой",
+    "price": "1200.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 13,
+  "fields": {
+    "category": 2,
+    "name": "Гречка с курицей",
+    "description": "Гречневая каша с курицей",
+    "price": "1100.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 14,
+  "fields": {
+    "category": 3,
+    "name": "Салат Оливье",
+    "description": "Салат с овощами и курицей",
+    "price": "900.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 15,
+  "fields": {
+    "category": 4,
+    "name": "Морс",
+    "description": "Ягодный напиток",
+    "price": "450.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 16,
+  "fields": {
+    "category": 5,
+    "name": "Пирожное",
+    "description": "Сладкий десерт",
+    "price": "600.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 18,
+  "fields": {
+    "category": 1,
+    "name": "Тестовое блюдо API",
+    "description": "Проверка создания блюда через REST API",
+    "price": "500.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 19,
+  "fields": {
+    "category": 1,
+    "name": "Блюдо от администратора",
+    "description": "Проверка прав группы Администратор",
+    "price": "450.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 20,
+  "fields": {
+    "category": 2,
+    "name": "Рис с овощами",
+    "description": "Рис с овощами и зеленью",
+    "price": "650.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dish",
+  "pk": 21,
+  "fields": {
+    "category": 3,
+    "name": "Морковный салат",
+    "description": "Салат из свежей моркови с зеленью",
+    "price": "450.00",
+    "is_available": true
+  }
+},
+{
+  "model": "core.dailymenu",
+  "pk": 1,
+  "fields": {
+    "date": "2026-11-13",
+    "dishes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10
+    ]
+  }
+},
+{
+  "model": "core.dailymenu",
+  "pk": 2,
+  "fields": {
+    "date": "2026-11-19",
+    "dishes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21
+    ]
+  }
+},
+{
+  "model": "core.dailymenu",
+  "pk": 3,
+  "fields": {
+    "date": "2026-11-20",
+    "dishes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21
+    ]
+  }
+},
+{
+  "model": "core.dailymenu",
+  "pk": 4,
+  "fields": {
+    "date": "2026-11-21",
+    "dishes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21
+    ]
+  }
+},
+{
+  "model": "core.dailymenu",
+  "pk": 5,
+  "fields": {
+    "date": "2026-11-22",
+    "dishes": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16,
+      18,
+      19,
+      20,
+      21
+    ]
+  }
+}
+]

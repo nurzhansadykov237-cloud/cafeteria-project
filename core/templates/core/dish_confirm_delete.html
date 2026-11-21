@@ -1,20 +1,38 @@
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Удаление блюда</title>
-</head>
-<body>
-    <h1>Удалить блюдо?</h1>
+{% extends "core/base.html" %}
 
-    <p>Вы действительно хотите удалить блюдо «{{ dish.name }}»?</p>
+{% block title %}Удаление блюда — Столовая{% endblock %}
 
-    <form method="post">
-        {% csrf_token %}
-        <button type="submit">Да, удалить</button>
-    </form>
+{% block content %}
 
-    <a href="{% url 'dish_list' %}">Отмена</a>
-</body>
-</html>
+<div class="card shadow-sm border-danger">
+    <div class="card-body">
+
+        <h1 class="text-danger mb-4">Удалить блюдо?</h1>
+
+        <p class="fs-5">
+            Вы действительно хотите удалить блюдо
+            <strong>«{{ dish.name }}»</strong>?
+        </p>
+
+        <p class="text-muted">
+            Это действие нельзя будет отменить.
+        </p>
+
+        <form method="post">
+            {% csrf_token %}
+
+            <button type="submit" class="btn btn-danger">
+                Да, удалить
+            </button>
+
+            <a href="{% url 'dish_list' %}"
+               class="btn btn-outline-secondary">
+                Отмена
+            </a>
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}

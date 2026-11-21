@@ -1,27 +1,46 @@
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Информация о блюде</title>
-</head>
-<body>
-    <h1>{{ dish.name }}</h1>
+{% extends "core/base.html" %}
 
-    <p>Категория: {{ dish.category }}</p>
-    <p>Описание: {{ dish.description }}</p>
-    <p>Цена: {{ dish.price }} тг.</p>
+{% block title %}{{ dish.name }} — Столовая{% endblock %}
 
-    {% if dish.is_available %}
-        <p>Доступно</p>
-    {% else %}
-        <p>Недоступно</p>
-    {% endif %}
+{% block content %}
 
-    <a href="{% url 'dish_update' dish.pk %}">Редактировать</a>
-    <br>
-    <a href="{% url 'dish_delete' dish.pk %}">Удалить</a>
-    <br>
-    <a href="{% url 'dish_list' %}">Назад к списку</a>
-</body>
-</html>
+<div class="card shadow-sm">
+    <div class="card-body">
+
+        <h1 class="mb-4">{{ dish.name }}</h1>
+
+        <p><strong>Категория:</strong> {{ dish.category }}</p>
+        <p><strong>Описание:</strong> {{ dish.description }}</p>
+
+        <h4 class="text-success">
+            Цена: {{ dish.price }} тг.
+        </h4>
+
+        {% if dish.is_available %}
+            <span class="badge bg-success">Доступно</span>
+        {% else %}
+            <span class="badge bg-danger">Недоступно</span>
+        {% endif %}
+
+        <hr>
+
+        <a href="{% url 'dish_update' dish.pk %}"
+           class="btn btn-warning">
+            Редактировать
+        </a>
+
+        <a href="{% url 'dish_delete' dish.pk %}"
+           class="btn btn-danger">
+            Удалить
+        </a>
+
+        <a href="{% url 'dish_list' %}"
+           class="btn btn-outline-secondary">
+            Назад к списку
+        </a>
+
+    </div>
+</div>
+
+{% endblock %}

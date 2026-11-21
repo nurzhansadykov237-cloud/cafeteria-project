@@ -250,3 +250,182 @@ class OrderViewSet(viewsets.ModelViewSet):
     queryset = Order.objects.prefetch_related("items__dish")
     serializer_class = OrderSerializer
     permission_classes = [IsAdminOrReadOnly]
+def about(request):
+    return render(request, "core/about.html")
+def cart_view(request):
+    cart = request.session.get("cart", {})
+    dishes = Dish.objects.filter(
+        id__in=cart.keys(),
+        is_available=True
+    )
+
+    cart_items = []
+    total = 0
+    valid_cart = {}
+
+    for dish in dishes:
+        try:
+            quantity = int(cart.get(str(dish.id), 0))
+        except (ValueError, TypeError):
+            continue
+
+        if quantity < 1:
+            continue
+
+        valid_cart[str(dish.id)] = quantity
+
+        subtotal = dish.price * quantity
+        total += subtotal
+
+        cart_items.append({
+            "dish": dish,
+            "quantity": quantity,
+            "subtotal": subtotal,
+        })
+
+    if valid_cart != cart:
+        request.session["cart"] = valid_cart
+        messages.warning(
+            request,
+            "Некорректные позиции корзины были удалены."
+        )
+
+    return render(request, "core/cart.html", {
+        "cart_items": cart_items,
+        "total": total,
+    })
+
+def add_to_cart(request, dish_id):
+    if request.method == "POST":
+        dish = Dish.objects.filter(
+            id=dish_id,
+            is_available=True
+        ).first()
+
+        if dish is None:
+            messages.error(request, "Блюдо недоступно.")
+            return redirect("home")
+
+        try:
+            quantity = int(request.POST.get("quantity", 1))
+        except (ValueError, TypeError):
+            messages.error(request, "Введите корректное количество.")
+            return redirect("home")
+
+        if quantity < 1:
+            messages.error(request, "Количество должно быть больше нуля.")
+            return redirect("home")
+
+        cart = request.session.get("cart", {})
+        key = str(dish_id)
+
+        cart[key] = cart.get(key, 0) + quantity
+
+        request.session["cart"] = cart
+
+        messages.success(
+            request,
+            f"«{dish.name}» добавлено в корзину."
+        )
+
+    return redirect("cart")
+
+def checkout(request):
+    if request.method != "POST":
+        return redirect("cart")
+
+    customer_name = request.POST.get("customer_name", "").strip()
+    cart = request.session.get("cart", {})
+
+    if not customer_name:
+        messages.error(request, "Введите ваше имя.")
+        return redirect("cart")
+
+    if not cart:
+        messages.error(request, "Корзина пуста.")
+        return redirect("cart")
+
+    dishes = Dish.objects.filter(
+        id__in=cart.keys(),
+        is_available=True
+    )
+
+    if dishes.count() != len(cart):
+        messages.error(request, "Некоторые блюда больше недоступны.")
+        return redirect("cart")
+
+    quantities = {}
+
+    for dish in dishes:
+        try:
+            quantity = int(cart[str(dish.id)])
+        except (ValueError, TypeError):
+            messages.error(request, "Некорректное количество блюд.")
+            return redirect("cart")
+
+        if quantity < 1:
+            messages.error(request, "Количество должно быть больше нуля.")
+            return redirect("cart")
+
+        quantities[dish.id] = quantity
+
+    with transaction.atomic():
+        order = Order.objects.create(
+            customer_name=customer_name
+        )
+
+        for dish in dishes:
+            OrderItem.objects.create(
+                order=order,
+                dish=dish,
+                quantity=quantities[dish.id],
+                price=dish.price
+            )
+
+    request.session["cart"] = {}
+
+    messages.success(
+        request,
+        f"Заказ №{order.id} успешно оформлен!"
+    )
+
+    return redirect("home")
+def remove_from_cart(request, dish_id):
+    if request.method == "POST":
+        cart = request.session.get("cart", {})
+        key = str(dish_id)
+
+        if key in cart:
+            del cart[key]
+            request.session["cart"] = cart
+            messages.success(request, "Блюдо удалено из корзины.")
+        else:
+            messages.error(request, "Блюдо не найдено в корзине.")
+
+    return redirect("cart")
+
+def update_cart(request, dish_id):
+    if request.method == "POST":
+        cart = request.session.get("cart", {})
+        key = str(dish_id)
+
+        if key not in cart:
+            messages.error(request, "Блюдо не найдено в корзине.")
+            return redirect("cart")
+
+        try:
+            quantity = int(request.POST.get("quantity", 1))
+        except (ValueError, TypeError):
+            messages.error(request, "Введите корректное количество.")
+            return redirect("cart")
+
+        if quantity < 1:
+            messages.error(request, "Количество должно быть больше нуля.")
+            return redirect("cart")
+
+        cart[key] = quantity
+        request.session["cart"] = cart
+
+        messages.success(request, "Количество блюда обновлено.")
+
+    return redirect("cart")
