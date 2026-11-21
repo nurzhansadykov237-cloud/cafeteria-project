@@ -176,6 +176,10 @@ class DishAPITest(TestCase):
 
 class CartTest(TestCase):
 
+    def test_unauthenticated_user_cannot_view_dishes(self):
+        guest_client = APIClient()
+        response = guest_client.get("/api/dishes/")
+        self.assertEqual(response.status_code, 403)
     def setUp(self):
         self.category = Category.objects.create(
             name="Тестовая категория"
