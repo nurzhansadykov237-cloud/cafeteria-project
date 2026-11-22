@@ -1,0 +1,97 @@
+
+{% extends "core/base.html" %}
+
+{% block title %}Корзина — Столовая{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-4">🛒 Моя корзина</h2>
+
+{% if cart_items %}
+
+    <div class="card shadow-sm">
+        <div class="card-body">
+
+            {% for item in cart_items %}
+                <div class="row align-items-center border-bottom py-3">
+                    <div class="col-md-5">
+                        <h5>{{ item.dish.name }}</h5>
+                        <small class="text-muted">
+                            {{ item.dish.category.name }}
+                        </small>
+                    </div>
+
+                    <div class="col-md-2">
+    <form method="post"
+          action="{% url 'core:update_cart' item.dish.id %}">
+        {% csrf_token %}
+
+        <input type="number"
+               name="quantity"
+               min="1"
+               value="{{ item.quantity }}"
+               class="form-control mb-2">
+
+        <button type="submit" class="btn btn-outline-primary btn-sm">
+            Обновить
+        </button>
+    </form>
+</div>
+                    <div class="col-md-2">
+                        {{ item.dish.price }} тг.
+                    </div>
+
+                    <div class="col-md-3">
+    <div class="fw-bold text-success mb-2">
+        {{ item.subtotal }} тг.
+    </div>
+
+    <form method="post"
+          action="{% url 'core:remove_from_cart' item.dish.id %}">
+        {% csrf_token %}
+
+        <button type="submit" class="btn btn-outline-danger btn-sm">
+            Удалить
+        </button>
+    </form>
+</div>
+                </div>
+            {% endfor %}
+
+            <div class="text-end mt-4">
+                <h4>
+                    Итого:
+                    <span class="text-success">{{ total }} тг.</span>
+                </h4>
+            </div>
+
+        </div>
+    </div>
+
+    <form method="post" action="{% url 'core:checkout' %}" class="mt-4">
+        {% csrf_token %}
+
+        <label class="form-label">Ваше имя:</label>
+        <input type="text"
+               name="customer_name"
+               class="form-control mb-3"
+               required>
+
+        <button type="submit" class="btn btn-success btn-lg">
+            Оформить заказ
+        </button>
+    </form>
+
+{% else %}
+
+    <div class="alert alert-info">
+        Ваша корзина пока пуста.
+    </div>
+
+{% endif %}
+
+<a href="/" class="btn btn-outline-primary mt-3">
+    Вернуться к меню
+</a>
+
+{% endblock %}

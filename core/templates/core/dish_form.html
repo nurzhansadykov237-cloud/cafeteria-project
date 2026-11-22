@@ -1,21 +1,60 @@
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Форма блюда</title>
-</head>
-<body>
-    <h1>Добавить или изменить блюдо</h1>
+{% extends "core/base.html" %}
 
-    <form method="post">
-        {% csrf_token %}
+{% block title %}Форма блюда — Столовая{% endblock %}
 
-        {{ form.as_p }}
+{% block content %}
 
-        <button type="submit">Сохранить</button>
-    </form>
+<div class="card shadow-sm">
+    <div class="card-body">
 
-    <a href="{% url 'dish_list' %}">Назад к списку</a>
-</body>
-</html>
+        <h1 class="mb-4">Добавить или изменить блюдо</h1>
+
+        <form method="post">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            {% for field in form %}
+                <div class="mb-3">
+
+                    <label class="form-label">
+                        {{ field.label }}
+                    </label>
+
+                    {{ field }}
+
+                    {% if field.errors %}
+                        <div class="text-danger small">
+                            {{ field.errors }}
+                        </div>
+                    {% endif %}
+
+                    {% if field.help_text %}
+                        <div class="form-text">
+                            {{ field.help_text }}
+                        </div>
+                    {% endif %}
+
+                </div>
+            {% endfor %}
+
+            <button type="submit" class="btn btn-success">
+                Сохранить
+            </button>
+
+            <a href="{% url 'core:dish_list' %}"
+               class="btn btn-outline-secondary">
+                Назад к списку
+            </a>
+
+        </form>
+
+    </div>
+</div>
+
+{% endblock %}
