@@ -23,7 +23,7 @@
 
                     <div class="col-md-2">
     <form method="post"
-          action="{% url 'update_cart' item.dish.id %}">
+          action="{% url 'core:update_cart' item.dish.id %}">
         {% csrf_token %}
 
         <input type="number"
@@ -47,7 +47,7 @@
     </div>
 
     <form method="post"
-          action="{% url 'remove_from_cart' item.dish.id %}">
+          action="{% url 'core:remove_from_cart' item.dish.id %}">
         {% csrf_token %}
 
         <button type="submit" class="btn btn-outline-danger btn-sm">
@@ -68,7 +68,7 @@
         </div>
     </div>
 
-    <form method="post" action="{% url 'checkout' %}" class="mt-4">
+    <form method="post" action="{% url 'core:checkout' %}" class="mt-4">
         {% csrf_token %}
 
         <label class="form-label">Ваше имя:</label>

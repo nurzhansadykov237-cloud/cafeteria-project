@@ -25,17 +25,17 @@
 
         <hr>
 
-        <a href="{% url 'dish_update' dish.pk %}"
+        <a href="{% url 'core:dish_update' dish.pk %}"
            class="btn btn-warning">
             Редактировать
         </a>
 
-        <a href="{% url 'dish_delete' dish.pk %}"
+        <a href="{% url 'core:dish_delete' dish.pk %}"
            class="btn btn-danger">
             Удалить
         </a>
 
-        <a href="{% url 'dish_list' %}"
+        <a href="{% url 'core:dish_list' %}"
            class="btn btn-outline-secondary">
             Назад к списку
         </a>

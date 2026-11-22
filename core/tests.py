@@ -195,11 +195,11 @@ class CartTest(TestCase):
 
     def test_add_dish_to_cart(self):
         response = self.client.post(
-            reverse("add_to_cart", args=[self.dish.id]),
+            reverse("core:add_to_cart", args=[self.dish.id]),
             {"quantity": 2}
         )
 
-        self.assertRedirects(response, reverse("cart"))
+        self.assertRedirects(response, reverse("core:cart"))
 
         cart = self.client.session["cart"]
         self.assertEqual(cart[str(self.dish.id)], 2)
@@ -209,7 +209,7 @@ class CartTest(TestCase):
         session["cart"] = {str(self.dish.id): 2}
         session.save()
 
-        response = self.client.get(reverse("cart"))
+        response = self.client.get(reverse("core:cart"))
 
         self.assertEqual(response.context["total"], 1000)
 
@@ -219,7 +219,7 @@ class CartTest(TestCase):
         session.save()
 
         self.client.post(
-            reverse("update_cart", args=[self.dish.id]),
+            reverse("core:update_cart", args=[self.dish.id]),
             {"quantity": 5}
         )
 
@@ -232,7 +232,7 @@ class CartTest(TestCase):
         session.save()
 
         self.client.post(
-            reverse("remove_from_cart", args=[self.dish.id])
+            reverse("core:remove_from_cart", args=[self.dish.id])
         )
 
         cart = self.client.session["cart"]
@@ -244,7 +244,7 @@ class CartTest(TestCase):
         session.save()
 
         response = self.client.post(
-            reverse("checkout"),
+            reverse("core:checkout"),
             {"customer_name": "Тестовый клиент"}
         )
 
@@ -275,11 +275,11 @@ class CartInvalidQuantityTest(TestCase):
 
     def test_add_to_cart_with_invalid_quantity(self):
         response = self.client.post(
-            reverse("add_to_cart", args=[self.dish.id]),
+            reverse("core:add_to_cart", args=[self.dish.id]),
             {"quantity": "abc"}
         )
 
-        self.assertRedirects(response, reverse("home"))
+        self.assertRedirects(response, reverse("core:home"))
         self.assertNotIn(
             str(self.dish.id),
             self.client.session.get("cart", {})
@@ -293,9 +293,9 @@ class CartInvalidQuantityTest(TestCase):
         session.save()
 
         response = self.client.post(
-            reverse("checkout"),
+            reverse("core:checkout"),
             {"customer_name": "Тестовый клиент"}
         )
 
-        self.assertRedirects(response, reverse("cart"))
+        self.assertRedirects(response, reverse("core:cart"))
         self.assertEqual(Order.objects.count(), 0)

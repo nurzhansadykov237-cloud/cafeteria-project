@@ -94,7 +94,7 @@
                     </p>
 
                     <form method="post"
-                          action="{% url 'add_to_cart' dish.id %}">
+                          action="{% url 'core:add_to_cart' dish.id %}">
                         {% csrf_token %}
 
                         <label class="form-label">Количество:</label>
@@ -120,7 +120,7 @@
 </div>
 
 <div class="mt-4">
-    <a href="{% url 'cart' %}" class="btn btn-primary btn-lg">
+    <a href="{% url 'core:cart' %}" class="btn btn-primary btn-lg">
         🛒 Перейти в корзину
     </a>
 </div>
